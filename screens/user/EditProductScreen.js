@@ -105,6 +105,7 @@ const EditProductScreen = props => {
         <View style={styles.formControl}>
             <Text style={styles.label}>Title</Text>
             <TextInput
+                id='title'
                 style={styles.input}
                 value={formState.inputValues.title}
                 onChangeText={textChangeHandler.bind(this, 'title')}
@@ -114,7 +115,6 @@ const EditProductScreen = props => {
                 returnKeyType='next'
                 required
             />
-            {!formState.inputValidities.title && <Text>Please enter a valid title!</Text>}
         </View>
         <View style={styles.formControl}>
             <Text style={styles.label}>Image URL</Text>
