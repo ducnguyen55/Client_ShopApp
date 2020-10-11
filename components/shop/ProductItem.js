@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Colors from '../../constants/Color';
+import Card from '../UI/Card';
 
 const ProductItem = props => {
     return (
-        <TouchableOpacity style={styles.button} onPress={props.onViewDetail}>
-            <View style={styles.product}>
+        <TouchableOpacity style={styles.button} onPress={props.onSelect}>
+            <Card style={styles.product}>
                 <View style={styles.imageContainer}>
                     <Image source={{uri: props.image}} style={styles.image}/>          
                 </View>
@@ -14,23 +15,16 @@ const ProductItem = props => {
                     <Text style={styles.price}>${props.price.toFixed(2)}</Text>
                 </View>
                 <View style={styles.action}>           
-                    <Button color={Colors.primaryColor} title="To Cart" onPress={props.onAddToCart}/>
+                    {props.children}
                 </View>
-            </View>
+            </Card>
         </TouchableOpacity> 
     )
 };
 
 const styles = StyleSheet.create({
     product: {
-        shadowColor: 'black',
-        shadowOpacity: 0.2,
-        shadowOffset: {width: 0, height: 2},
-        shadowRadius: 8,
-        elevation: 5,
-        borderRadius: 10,
-        backgroundColor: 'white',
-        height: 300,
+        height: 250,
         margin: 20
     },
     image: {
@@ -50,7 +44,7 @@ const styles = StyleSheet.create({
         marginVertical: 0
     },
     price: {
-        fontSize: 14,
+        fontSize: 18,
         fontFamily: 'open-sans',
         color: Colors.secondaryText
     },
@@ -58,12 +52,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: '25%',
         paddingHorizontal: 20
     },
     details: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        height: '15%',
         padding: 10
     }
 });

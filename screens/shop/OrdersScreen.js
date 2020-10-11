@@ -5,6 +5,7 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import HeaderButton from '../../components/UI/HeaderButton';
 import OrderItem from '../../components/shop/OrderItem';
+import CartItem from '../../components/shop/CartItem';
 
 const OrdersScreen = props => {
     // state -> orders đầu tiên là sẽ vào App.js cái thứ 2 là của reducers
@@ -17,6 +18,7 @@ const OrdersScreen = props => {
                 <OrderItem 
                     amount={itemData.item.totalAmount} 
                     date={itemData.item.date}
+                    items={itemData.item.items}
                 />
             }
         />
