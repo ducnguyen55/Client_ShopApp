@@ -17,9 +17,8 @@ const ProductsOverViewScreen = props => {
     const dispatch = useDispatch();
 
     const loadProducts = useCallback(async () => {
-        console.log('LOAD PRODUCTS');
         SetError(null);
-        setIsRefreshing(true);
+        // setIsRefreshing(true);
         try {
             await dispatch(productsActions.fetchProducts());
         } catch(err) {
