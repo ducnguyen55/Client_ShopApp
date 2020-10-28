@@ -24,6 +24,12 @@ const ProductDetailScreen = props => {
                             dispatch(cartActions.addToCart(selectedProduct))
                         }
                     }/>
+                <Button color={Colors.primaryColor} title="Exchange" 
+                    onPress={() => 
+                        {
+                            dispatch(cartActions.addToCart(selectedProduct))
+                        }
+                    }/>
             </View>
             <Text style={styles.price}>${selectedProduct.price.toFixed(2)}</Text>
             <Text style={styles.description}>{selectedProduct.description}</Text>

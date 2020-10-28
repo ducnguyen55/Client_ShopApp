@@ -1,11 +1,28 @@
 import React, { useState, useEffect, useCallback, useReducer } from 'react';
-import { View, ScrollView, Text, TextInput, StyleSheet, Platform, Alert, ActivityIndicator } from 'react-native';
+import { View, ScrollView, Text, TextInput, StyleSheet, Platform, Alert, ActivityIndicator, Button, Image } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
+import * as ImagePicker from 'expo-image-picker';
+import * as firebase from 'firebase';
 
 import Colors from '../../constants/Color';
 import HeaderButton from '../../components/UI/HeaderButton';
 import * as productsActions from '../../store/actions/products';
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDx7qy1h9IyWbmAC_qX6bjeDPAK1vLtPVA",
+    authDomain: "shopapp-8a6fd.firebaseapp.com",
+    databaseURL: "https://shopapp-8a6fd.firebaseio.com",
+    projectId: "shopapp-8a6fd",
+    storageBucket: "shopapp-8a6fd.appspot.com",
+    messagingSenderId: "571587559134",
+    appId: "1:571587559134:web:e429e7c4878148a9100c4f",
+    measurementId: "G-RYPX19C7L2"
+  };
+  
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
@@ -36,6 +53,7 @@ const formReducer = (state, action) => {
 const EditProductScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState();
+    const [pickerResult, setPickerResult] = useState();
 
     const prodId = props.navigation.getParam('productId');
     const editedProduct = useSelector(state =>
@@ -66,7 +84,9 @@ const EditProductScreen = props => {
     }, [error]);
 
     const submitHandler = useCallback(async () => {
-        if (!formState.formIsValid ) {
+        console.log(formState.inputValues);
+        console.log(editedProduct);
+        if (!formState.formIsValid) {
             Alert.alert('Wrong input!','Please input a field.', [{text: 'OK'}]);
             return;
         }
@@ -74,6 +94,7 @@ const EditProductScreen = props => {
         setIsLoading(true);
         try {
             if (editedProduct) {
+                console.log(editedProduct);
                 await dispatch(
                     productsActions.updateProduct(
                         prodId, 
@@ -83,6 +104,7 @@ const EditProductScreen = props => {
                     )
                 );
             } else {
+                console.log(formState.inputValues);
                 await dispatch(
                     productsActions.createProduct(
                         formState.inputValues.title, 
@@ -102,6 +124,48 @@ const EditProductScreen = props => {
     useEffect(() => {
         props.navigation.setParams({ submit: submitHandler });
     }, [submitHandler]);
+
+    const getRandomString = (length) => {
+        var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var result = '';
+        for ( var i = 0; i < length; i++ ) {
+            result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+        }
+        return result;
+    }
+    
+    const _pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1
+        });
+    
+        if (!result.cancelled) {
+            uploadImage(result.uri, getRandomString(20))
+                .then(() => {
+                    console.log('it work')
+                })
+                .catch(error => {
+                    console.log('it does not work')
+                    console.error(error)
+                })
+        }
+    }
+    
+    const  uploadImage = async (uri, imageName) => {
+          const response = await fetch(uri);
+          const blob = await response.blob();
+    
+          const ref = firebase.storage().ref().child(`${imageName}`);
+
+          ref.put(blob).then(snapshot => {
+            snapshot.ref.getDownloadURL().then(url => {
+                textChangeHandler('imageUrl', url);
+            })
+          })
+      }
 
     const textChangeHandler = (inputIdentifier, text) => {
         let isValid = false;
@@ -141,26 +205,17 @@ const EditProductScreen = props => {
                 required
             />
         </View>
-        <View style={styles.formControl}>
-            <Text style={styles.label}>Image URL</Text>
-            <TextInput
-            style={styles.input}
-            value={formState.inputValues.imageUrl}
-            onChangeText={textChangeHandler.bind(this, 'imageUrl')}
-            required
-            />
-        </View>
-            {editedProduct ? null : (
+        {editedProduct ? null : (
             <View style={styles.formControl}>
-            <Text style={styles.label}>Price</Text>
-            <TextInput
-            style={styles.input}
-            value={formState.inputValues.price}
-            onChangeText={textChangeHandler.bind(this, 'price')}
-            keyboardType='decimal-pad'
-            required
-            />
-        </View>
+                <Text style={styles.label}>Price</Text>
+                <TextInput
+                    style={styles.input}
+                    value={formState.inputValues.price}
+                    onChangeText={textChangeHandler.bind(this, 'price')}
+                    keyboardType='decimal-pad'
+                    required
+                />
+            </View>
         )}
         <View style={styles.formControl}>
             <Text style={styles.label}>Description</Text>
@@ -170,6 +225,22 @@ const EditProductScreen = props => {
             onChangeText={textChangeHandler.bind(this, 'description')}
             required
             />
+        </View>
+        <View style={styles.formControl, styles.image}>
+            {/* <Text style={styles.label}>Image URL</Text>
+            <TextInput
+            style={styles.input}
+            value={formState.inputValues.imageUrl}
+            onChangeText={textChangeHandler.bind(this, 'imageUrl')}
+            required
+            /> */}
+            <Button onPress={_pickImage} title="Choose Image" />
+            {formState.inputValues.imageUrl
+            ? <Image
+                source={{uri: formState.inputValues.imageUrl}}
+                style={{ width: 300, height: 250 }}
+                />
+            : null}
         </View>
     </View>
     </ScrollView>
@@ -208,7 +279,13 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center'
-  }
+  },
+  image: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ecf0f1'
+  },
 });
 
 export default EditProductScreen;
