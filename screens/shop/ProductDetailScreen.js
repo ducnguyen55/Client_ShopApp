@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Button } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, Button, Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
@@ -13,18 +13,12 @@ const ProductDetailScreen = props => {
         state.products.availableProducts.find(prod => prod.id === productId));
 
     const dispatch = useDispatch();
-    
+
     return (
         <ScrollView>
             <Image source={{uri: selectedProduct.imageUrl}} style={styles.image}/>
             <View style={styles.actions}>
                 <Button color={Colors.primaryColor} title="Add to Cart" 
-                    onPress={() => 
-                        {
-                            dispatch(cartActions.addToCart(selectedProduct))
-                        }
-                    }/>
-                <Button color={Colors.primaryColor} title="Exchange" 
                     onPress={() => 
                         {
                             dispatch(cartActions.addToCart(selectedProduct))

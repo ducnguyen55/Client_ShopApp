@@ -1,6 +1,6 @@
 export default {
-    dark: '#0097A7',
-    light: '#B2EBF2',
+    dark: '#7200ca',
+    light: '#bbdefb',
     primaryColor: '#00BCD4',
     text: '#FFFFFF',
     accent: '#03A9F4',

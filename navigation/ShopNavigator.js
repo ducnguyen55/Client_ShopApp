@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
+import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 

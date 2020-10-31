@@ -122,7 +122,6 @@ export default class App extends Component {
     let { pickerResult } = this.state;
     let imageUri = pickerResult;
 
-    console.log(imageUri);
     return (
       <View style={styles.container}>
         <Button onPress={this._pickImage} title="Open Picker" />
