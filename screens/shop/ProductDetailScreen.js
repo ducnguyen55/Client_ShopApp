@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, Button, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Button, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { Image } from 'react-native-elements';
 
 import Colors from '../../constants/Color';
 import HeaderButton from '../../components/UI/HeaderButton';
@@ -16,7 +17,7 @@ const ProductDetailScreen = props => {
 
     return (
         <ScrollView>
-            <Image source={{uri: selectedProduct.imageUrl}} style={styles.image}/>
+            <Image source={{uri: selectedProduct.imageUrl}} style={styles.image} PlaceholderContent={<ActivityIndicator size='large' color={Colors.primaryColor} />}/>
             <View style={styles.actions}>
                 <Button color={Colors.primaryColor} title="Add to Cart" 
                     onPress={() => 

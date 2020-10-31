@@ -1,14 +1,15 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Colors from '../../constants/Color';
 import Card from '../UI/Card';
+import { Image } from 'react-native-elements';
 
 const ProductItem = props => {
     return (
         <TouchableOpacity style={styles.button} onPress={props.onSelect}>
             <Card style={styles.product}>
                 <View style={styles.imageContainer}>
-                    <Image source={{uri: props.image}} style={styles.image}/>          
+                    <Image source={{uri: props.image}} style={styles.image} PlaceholderContent={<ActivityIndicator size='large' color={Colors.primaryColor} />} />
                 </View>
                 <View style={styles.details}>
                     <Text style={styles.title}>{props.title}</Text>

@@ -2,7 +2,6 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
-import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 
@@ -13,6 +12,7 @@ import OrdesScreen from '../screens/shop/OrdersScreen';
 import UserProductsScreen from '../screens/user/UserProductsScreen';
 import EditProductScreen from '../screens/user/EditProductScreen';
 import AuthScreen from '../screens/user/AuthScreen';
+import PaymentScreen from '../screens/shop/PaymentScreen';
 import StartupScreen from '../screens/StartupScreen';
 import Colors from '../constants/Color';
 import { Platform, SafeAreaView, Button, View } from 'react-native';
@@ -34,6 +34,7 @@ const ProductsNavigator = createStackNavigator (
     {
     ProductsOverView: ProductsOverViewScreen,
     ProductDetail: ProductDetailScreen,
+    Payment: PaymentScreen,
     Cart: CartScreen
     }, 
     {   

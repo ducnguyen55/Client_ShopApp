@@ -35,6 +35,10 @@ const CartScreen = props => {
     setIsLoading(false);
   }
 
+  const selectItemHandler = () => {
+    props.navigation.navigate('Payment');
+  };
+
   return (
     <View style={styles.screen}>
       <Card style={styles.summary}>
@@ -48,7 +52,7 @@ const CartScreen = props => {
           color={Colors.accent}
           title="Order Now"
           disabled={cartItems.length === 0}
-          onPress={sendOrderHandler}
+          onPress={selectItemHandler}
         />
         )}
       </Card>

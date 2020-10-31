@@ -17,6 +17,8 @@ export default (state = initialState, action) => {
                 action.orderData.ownerId, 
                 action.orderData.items, 
                 action.orderData.amount,
+                action.orderData.fullname,
+                action.orderData.phone,
                 action.orderData.date,
             );
             return {

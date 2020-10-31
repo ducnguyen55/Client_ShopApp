@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback, useReducer } from 'react';
-import { View, ScrollView, Text, TextInput, StyleSheet, Platform, Alert, ActivityIndicator, Button, Image } from 'react-native';
+import { View, ScrollView, Text, TextInput, StyleSheet, Platform, Alert, ActivityIndicator, Button } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import * as firebase from 'firebase';
+import { Image } from 'react-native-elements';
 
 import Colors from '../../constants/Color';
 import HeaderButton from '../../components/UI/HeaderButton';
@@ -239,6 +240,7 @@ const EditProductScreen = props => {
             ? <Image
                 source={{uri: formState.inputValues.imageUrl}}
                 style={{ width: 300, height: 250 }}
+                PlaceholderContent={<ActivityIndicator size='large' color={Colors.primaryColor} />}
                 />
             : null}
         </View>
