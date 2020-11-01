@@ -10,7 +10,11 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSelector, useDispatch } from 'react-redux';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import * as Location from 'expo-location';
 
+import HeaderButton from '../../components/UI/HeaderButton';
+import LocationPicker from '../../components/LocationPicker';
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
 import Colors from '../../constants/Color';
@@ -47,6 +51,7 @@ const PaymentScreen = props => {
 
     const cartTotalAmount = useSelector(state => state.cart.totalAmount);
     const cartItems = useSelector(state => {
+      console.log(state.cart);
     const transformedCartItems = [];
     for (const key in state.cart.items) {
       transformedCartItems.push({
@@ -54,14 +59,12 @@ const PaymentScreen = props => {
         productTitle: state.cart.items[key].productTitle,
         productPrice: state.cart.items[key].productPrice,
         quantity: state.cart.items[key].quantity,
-        sum: state.cart.items[key].sum
+        sum: state.cart.items[key].sum,
+        ownerId:  state.cart.items[key].ownerId
       });
     }
         return transformedCartItems.sort((a, b) => a.productId > b.productId ? 1 : -1);
     });
-
-
-
     const [formState, dispatchFormState] = useReducer(formReducer, {
         inputValues: {
             fullname: '',
@@ -85,11 +88,11 @@ const PaymentScreen = props => {
         },
         [dispatchFormState]
     );
-
+    
     const sendOrderHandler = async () => {
-        console.log(formState.inputValues)
         setIsLoading(true);
-        await dispatch(ordersActions.addOrder(cartItems ,cartTotalAmount, formState.inputValues.fullname, formState.inputValues.phone));
+        const location = await Location.getCurrentPositionAsync();
+        await dispatch(ordersActions.addOrder(cartItems ,cartTotalAmount, formState.inputValues.fullname, formState.inputValues.phone, location.coords.latitude, location.coords.longitude));
         Alert.alert('Thanks you', 'Thanks you bought my product', [{text: 'OK'}]);
         props.navigation.navigate('ProductsOverView');
         setIsLoading(false);
@@ -101,7 +104,8 @@ const PaymentScreen = props => {
       style={styles.screen}
     >
       <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
-        <Card style={styles.authContainer}>
+        <LocationPicker />
+        <Card style={styles.authContainer}>      
           <ScrollView>
             <Input
               id="fullname"
@@ -116,7 +120,6 @@ const PaymentScreen = props => {
               label="Phone"
               keyboardType="number-pad"
               required
-              minLength={10}
               autoCapitalize="none"
               errorText="Please enter a valid phone."
               onInputChange={inputChangeHandler}
@@ -140,9 +143,16 @@ const PaymentScreen = props => {
   );
 };
 
-PaymentScreen.navigationOptions = {
-  headerTitle: 'Payment',
-  headerBackTitle: 'Back'
+PaymentScreen.navigationOptions = navData => {
+  return {
+    headerTitle: 'Payment',
+    headerBackTitle: 'Back',
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+          <Item title='Cart' iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} onPress={() =>{navData.navigation.navigate('Cart')}} />
+      </HeaderButtons>
+      )
+  }
 };
 
 const styles = StyleSheet.create({

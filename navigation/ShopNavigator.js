@@ -9,6 +9,7 @@ import ProductsOverViewScreen from '../screens/shop/ProductsOverViewScreen';
 import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
 import CartScreen from '../screens/shop/CartScreen';
 import OrdesScreen from '../screens/shop/OrdersScreen';
+import SellScreen from '../screens/shop/SellScreen';
 import UserProductsScreen from '../screens/user/UserProductsScreen';
 import EditProductScreen from '../screens/user/EditProductScreen';
 import AuthScreen from '../screens/user/AuthScreen';
@@ -67,6 +68,23 @@ const OrdersNavigator = createStackNavigator(
     }
 )
 
+const SellScreenNavigator = createStackNavigator(
+    {
+        Sell: SellScreen
+    }, 
+    {   
+        navigationOptions: {
+            drawerIcon: drawerConfig => (
+                <Ionicons   name={Platform.OS === 'android' ? 'md-cash' : 'ios-cash'}
+                            size={23}
+                            color={Colors.accent}
+                />
+            )
+        },
+        defaultNavigationOptions: defaultNavOptions
+    }
+)
+
 const AdminNavigator = createStackNavigator(
     {
         UserProducts: UserProductsScreen,
@@ -88,6 +106,7 @@ const AdminNavigator = createStackNavigator(
 const ShopNavigator = createDrawerNavigator({
     Products: ProductsNavigator,
     Orders: OrdersNavigator,
+    Sell: SellScreenNavigator,
     Admin: AdminNavigator
 }, {
     contentOptions: {

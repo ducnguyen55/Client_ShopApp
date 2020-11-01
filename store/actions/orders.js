@@ -1,7 +1,9 @@
 import Orders from '../../models/order';
+import Sell from '../../models/sell';
 
 export const ADD_ORDER = 'ADD_ORDER';
 export const SET_ORDERS = 'SET_ORDERS';
+export const SET_SELL = 'SET_SELL';
 
 export const fetchOrders = () => {
     return async (dispatch, getState) => {
@@ -22,10 +24,14 @@ export const fetchOrders = () => {
           loadedOrders.push(
             new Orders(
               key,
-              'u1',
+              userId,
               resData[key].cartItems,
               resData[key].totalAmount,
-              new Date(resData[key].date)
+              new Date(resData[key].date),
+              resData[key].fullname,
+              resData[key].phone,
+              resData[key].latitude,
+              resData[key].longitude
             )
           );
         }
@@ -36,7 +42,7 @@ export const fetchOrders = () => {
     };
   };
 
-export const addOrder = (cartItems, totalAmount, fullname, phone) => {
+export const addOrder = (cartItems, totalAmount, fullname, phone, latitude, longitude) => {
     return async (dispatch, getState) => {
       const token = getState().auth.token;
       const userId = getState().auth.userId;
@@ -51,6 +57,8 @@ export const addOrder = (cartItems, totalAmount, fullname, phone) => {
               totalAmount,
               fullname,
               phone,
+              latitude,
+              longitude,
               date: date.toISOString()
             })
           });
@@ -69,8 +77,86 @@ export const addOrder = (cartItems, totalAmount, fullname, phone) => {
                 amount: totalAmount,
                 fullname: fullname,
                 phone: phone,
+                latitude: latitude,
+                longitude: longitude,
                 date: date
             }
         });
     } 
 }
+
+export const fetchSell = () => {
+  return async (dispatch, getState) => {
+    const userId = getState().auth.userId;
+    try {
+      const fullorders = await fetch(
+        `https://shopapp-8a6fd.firebaseio.com/orders.json`
+      );
+
+      const resOrder = await fullorders.json();
+
+      const loadedSell = [];
+
+      for(const userOrder in resOrder){
+        const response = await fetch(
+          `https://shopapp-8a6fd.firebaseio.com/orders/${userOrder}.json`
+        );
+        const resData = await response.json();
+
+        for (const key in resData) {
+          const cartItem = [];
+          for (var i = 0; i < resData[key].cartItems.length; i++)
+          {
+            if(userId === resData[key].cartItems[i].ownerId){
+              cartItem.push(resData[key].cartItems[i]);
+            }
+          }
+          console.log(cartItem);
+          if(cartItem.length !== 0) {
+            loadedSell.push(  
+              new Sell(
+                key,
+                userId,
+                cartItem,
+                cartItem[0].productPrice,
+                new Date(resData[key].date),
+                resData[key].fullname,
+                resData[key].phone,
+                resData[key].latitude,
+                resData[key].longitude
+              )
+            );
+          }
+        }
+      }
+      // for (const key in resData) {
+      //   const cartItem = [];
+      //   for (var i = 0; i < resData[key].cartItems.length; i++)
+      //   {
+      //     if(userId.trim() === resData[key].cartItems[i].ownerId.trim()){
+      //       cartItem.push(resData[key].cartItems[i]);
+      //     }
+      //   }
+      //   console.log(cartItem);
+      //   if(cartItem.length !== 0) {
+      //     loadedSell.push(  
+      //       new Sell(
+      //         key,
+      //         userId,
+      //         cartItem,
+      //         resData[key].totalAmount,
+      //         new Date(resData[key].date),
+      //         resData[key].fullname,
+      //         resData[key].phone,
+      //         resData[key].latitude,
+      //         resData[key].longitude
+      //       )
+      //     );
+      //   }
+      // }
+      dispatch({ type: SET_SELL, sell: loadedSell });
+    } catch (err) {
+      throw err;
+    }
+  };
+};

@@ -8,15 +8,14 @@ import OrderItem from '../../components/shop/OrderItem';
 import * as ordersActions from '../../store/actions/orders';
 import Colors from '../../constants/Color';
 
-const OrdersScreen = props => {
+const SellScreen = props => {
     const [isLoading, setIsLoading] = useState(false);
     // state -> orders đầu tiên là sẽ vào App.js cái thứ 2 là của reducers
-    const orders = useSelector(state => state.orders.orders)
+    const orders = useSelector(state => state.orders.sell)
     const dispatch = useDispatch();
-
     useEffect(() => {
         setIsLoading(true);
-        dispatch(ordersActions.fetchOrders()).then(() => {
+        dispatch(ordersActions.fetchSell()).then(() => {
             setIsLoading(false);
         });
     }, [dispatch]);
@@ -52,12 +51,12 @@ const OrdersScreen = props => {
     )
 }
 
-OrdersScreen.navigationOptions = navData => {
+SellScreen.navigationOptions = navData => {
     return {
-        headerTitle: 'Your Orders',
+        headerTitle: 'Your Sell',
         headerLeft: () => (
             <HeaderButtons HeaderButtonComponent={HeaderButton}>
-                <Item title='Orders' iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'} onPress={() =>{navData.navigation.toggleDrawer();}} />
+                <Item title='Sell' iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'} onPress={() =>{navData.navigation.toggleDrawer();}} />
             </HeaderButtons>
         )
     }
@@ -71,4 +70,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default OrdersScreen;
+export default SellScreen;

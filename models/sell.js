@@ -1,5 +1,5 @@
 import moment from 'moment';
-class Order {
+class Sell {
     constructor(id, ownerId, items, totalAmount, date, fullname, phone, latitude, longitude) {
         this.id = id;
         this.ownerId = ownerId;
@@ -24,4 +24,4 @@ class Order {
     }
 }
 
-export default Order;
+export default Sell;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
 
 import CartItem from './CartItem';
 import Colors from '../../constants/Color';
@@ -24,7 +25,21 @@ const OrderItem = props => {
                         amount={cartItem.sum}
                         title={cartItem.productTitle}
                     />
-                )}    
+                )}
+                <View style={styles.info}>
+                    <Text style={styles.title}>Full name: {props.fullname}</Text>
+                    <Text style={styles.title}>Phone: {props.phone}</Text>
+                </View>
+                <MapView 
+                style={styles.mapStyle}  
+                initialRegion={{latitude: props.latitude, longitude: props.longitude, latitudeDelta:0.01, longitudeDelta: 0.01}}
+                >
+                    <Marker
+                    coordinate={{latitude: props.latitude, longitude: props.longitude}}
+                    title={'Home'}
+                    description={'Home'}
+                    />
+                </MapView> 
             </View>}
         </Card>
     )
@@ -54,6 +69,19 @@ const styles = StyleSheet.create({
     },
     detailItems: {
         width: '100%'
+    },
+    title: {
+        fontFamily: 'open-sans-bold',
+        fontSize: 16
+    },
+    info: {
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center'
+    },
+    mapStyle: {
+        width: 300,
+        height: 250,
     }
 });
 
