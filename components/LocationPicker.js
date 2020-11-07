@@ -31,6 +31,8 @@ const LocationPicker = props => {
 
   const getLocationHandler = async () => {
     try {
+      let { status } = await Location.requestPermissionsAsync(); 
+      console.log(status);
       setIsFetching(true);
       const location = await Location.getCurrentPositionAsync({
         timeout: 5000
