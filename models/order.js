@@ -1,6 +1,6 @@
 import moment from 'moment';
 class Order {
-    constructor(id, ownerId, items, totalAmount, date, fullname, phone, latitude, longitude) {
+    constructor(id, ownerId, items, totalAmount, date, fullname, phone, latitude, longitude, feeship) {
         this.id = id;
         this.ownerId = ownerId;
         this.items = items;
@@ -10,6 +10,7 @@ class Order {
         this.phone = phone,
         this.latitude = latitude,
         this.longitude = longitude
+        this.feeship = feeship
     }
 
     get  readableDate() {

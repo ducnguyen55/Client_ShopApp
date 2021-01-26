@@ -12,6 +12,7 @@ const inputReducer = (state, action) => {
         value: action.value,
         isValid: action.isValid
       };
+      //Chạm vào hoặc chạm ra nếu có gì sẽ thông báo lỗi
     case INPUT_BLUR:
       return {
         ...state,

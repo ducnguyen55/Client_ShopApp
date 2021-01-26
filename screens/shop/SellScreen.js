@@ -18,7 +18,8 @@ const SellScreen = props => {
         dispatch(ordersActions.fetchSell()).then(() => {
             setIsLoading(false);
         });
-    }, [dispatch]);
+        setIsLoading(false);
+    }, [dispatch, orders]);
 
     if (isLoading) {
         return <View style={styles.centered}>
@@ -35,6 +36,7 @@ const SellScreen = props => {
     return (
         <FlatList 
             data={orders} 
+            refreshing={setIsLoading}
             keyExtractor={item => item.id} 
             renderItem={itemData => 
                 <OrderItem 

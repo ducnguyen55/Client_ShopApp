@@ -31,7 +31,8 @@ export const fetchOrders = () => {
               resData[key].fullname,
               resData[key].phone,
               resData[key].latitude,
-              resData[key].longitude
+              resData[key].longitude,
+              resData[key].feeship,
             )
           );
         }
@@ -42,7 +43,7 @@ export const fetchOrders = () => {
     };
   };
 
-export const addOrder = (cartItems, totalAmount, fullname, phone, latitude, longitude) => {
+export const addOrder = (cartItems, totalAmount, fullname, phone, latitude, longitude, feeship) => {
     return async (dispatch, getState) => {
       const token = getState().auth.token;
       const userId = getState().auth.userId;
@@ -59,6 +60,7 @@ export const addOrder = (cartItems, totalAmount, fullname, phone, latitude, long
               phone,
               latitude,
               longitude,
+              feeship,
               date: date.toISOString()
             })
           });
@@ -79,6 +81,7 @@ export const addOrder = (cartItems, totalAmount, fullname, phone, latitude, long
                 phone: phone,
                 latitude: latitude,
                 longitude: longitude,
+                feeship: feeship,
                 date: date
             }
         });
@@ -102,13 +105,14 @@ export const fetchSell = () => {
           `https://shopapp-8a6fd.firebaseio.com/orders/${userOrder}.json`
         );
         const resData = await response.json();
-
         for (const key in resData) {
           const cartItem = [];
+          var SelltotalAmount = 0
           for (var i = 0; i < resData[key].cartItems.length; i++)
           {
             if(userId === resData[key].cartItems[i].ownerId){
               cartItem.push(resData[key].cartItems[i]);
+              SelltotalAmount = SelltotalAmount + resData[key].cartItems[i].productPrice*resData[key].cartItems[i].quantity
             }
           }
           console.log(cartItem);
@@ -118,7 +122,7 @@ export const fetchSell = () => {
                 key,
                 userId,
                 cartItem,
-                cartItem[0].productPrice,
+                SelltotalAmount,
                 new Date(resData[key].date),
                 resData[key].fullname,
                 resData[key].phone,

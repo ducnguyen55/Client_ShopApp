@@ -29,6 +29,7 @@ export default (state = initialState, action) => {
                 action.orderData.phone,
                 action.orderData.latitude,
                 action.orderData.longitude,
+                action.orderData.feeship,
             );
             return {
                 ...state,

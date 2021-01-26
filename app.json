@@ -9,11 +9,11 @@
       "android",
       "web"
     ],
-    "icon": "./assets/icon.png",
+    "icon": "./assets/shop_icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/shop.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FEF9B0"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

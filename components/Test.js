@@ -8,6 +8,7 @@ import {
   StyleSheet
 } from 'react-native';
 import * as Location from 'expo-location';
+import {getDistance} from 'geolib';
 
 import Colors from '../constants/Color';
 import MapPreview from './MapPreview';
@@ -32,16 +33,15 @@ const LocationPicker = props => {
   const getLocationHandler = async () => {
     try {
       let { status } = await Location.requestPermissionsAsync(); 
-      console.log(status);
-      setIsFetching(true);
+      await setIsFetching(true);
       const location = await Location.getCurrentPositionAsync({
         timeout: 5000
       });
-      console.log(isFetching);
       setPickedLocation({
         lat: location.coords.latitude,
         lng: location.coords.longitude
       });
+      await calculateDistance(location.coords.latitude, location.coords.longitude)
     } catch (err) {
       Alert.alert(
         'Could not fetch location!',
@@ -49,7 +49,23 @@ const LocationPicker = props => {
         [{ text: 'Okay' }]
       );
     }
-    setIsFetching(false);
+
+    await setIsFetching(false);
+  };
+
+  const calculateDistance = async (lat, lng) => {
+    try {
+      var dis = getDistance(
+        {latitude: lat, longitude: lng},
+        {latitude: 10.755952474737242, longitude: 106.66266841132723},
+      );
+      alert(
+        `Distance\n\n${dis / 1000} KM \n\n Shipping fee ${Math.ceil(dis / 1000 * 5000 / 1000/23)}$`
+      );
+    }
+    catch (err) {
+      console.log("Error")
+    }
   };
 
   return (

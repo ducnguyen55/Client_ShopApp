@@ -19,7 +19,8 @@ const OrdersScreen = props => {
         dispatch(ordersActions.fetchOrders()).then(() => {
             setIsLoading(false);
         });
-    }, [dispatch]);
+        setIsLoading(false);
+    }, [dispatch, orders]);
 
     if (isLoading) {
         return <View style={styles.centered}>
@@ -36,6 +37,7 @@ const OrdersScreen = props => {
     return (
         <FlatList 
             data={orders} 
+            refreshing={setIsLoading}
             keyExtractor={item => item.id} 
             renderItem={itemData => 
                 <OrderItem 
@@ -46,6 +48,7 @@ const OrdersScreen = props => {
                     phone={itemData.item.phone}
                     latitude={itemData.item.latitude}
                     longitude={itemData.item.longitude}
+                    feeship={itemData.item.feeship}
                 />
             }
         />

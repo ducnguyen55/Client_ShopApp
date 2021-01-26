@@ -11,7 +11,7 @@ const OrderItem = props => {
     return (
         <Card style={styles.orderItem}>
             <View style={styles.summary}>
-                <Text style={styles.totalAmount}>${props.amount}</Text>
+                <Text style={styles.totalAmount}>${props.feeship != undefined ? Math.ceil(props.amount + props.feeship / 23) : props.amount}</Text>
                 <Text style={styles.date}>{props.date}</Text>
             </View>
             <Button color={Colors.primaryColor} title={showDetails ? "Hide Details" : "Show Details"} onPress={() => {
@@ -27,6 +27,11 @@ const OrderItem = props => {
                     />
                 )}
                 <View style={styles.info}>
+                {props.feeship != undefined ? 
+                    <Text style={styles.title}>FeeShip: $ {props.feeship != undefined ? Math.ceil(props.feeship.toFixed(2)/23) : 0}</Text> : 
+                    <Text></Text>
+                }
+                    {/* <Text style={styles.title}>FeeShip: $ {props.feeship != undefined ? props.feeship.toFixed(2) : 0}</Text> */}
                     <Text style={styles.title}>Full name: {props.fullname}</Text>
                     <Text style={styles.title}>Phone: {props.phone}</Text>
                 </View>
@@ -82,6 +87,7 @@ const styles = StyleSheet.create({
     mapStyle: {
         width: 300,
         height: 250,
+        left: 30
     }
 });
 

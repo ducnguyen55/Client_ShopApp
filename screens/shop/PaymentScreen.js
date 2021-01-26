@@ -12,9 +12,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import * as Location from 'expo-location';
+import {getDistance} from 'geolib';
 
 import HeaderButton from '../../components/UI/HeaderButton';
-import LocationPicker from '../../components/LocationPicker';
+import LocationPicker from '../../components/Test';
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
 import Colors from '../../constants/Color';
@@ -22,6 +23,7 @@ import * as ordersActions from '../../store/actions/orders';
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
 
+//Cơ chế tương tự redux nhưng thật chất là useState
 const formReducer = (state, action) => {
   if (action.type === FORM_INPUT_UPDATE) {
     const updatedValues = {
@@ -92,17 +94,22 @@ const PaymentScreen = props => {
     const sendOrderHandler = async () => {
         setIsLoading(true);
         const location = await Location.getCurrentPositionAsync();
-        await dispatch(ordersActions.addOrder(cartItems ,cartTotalAmount, formState.inputValues.fullname, formState.inputValues.phone, location.coords.latitude, location.coords.longitude));
+        var dis = getDistance(
+          {latitude: location.coords.latitude, longitude: location.coords.longitude},
+          {latitude: 10.755952474737242, longitude: 106.66266841132723},
+        );
+        
+        await dispatch(ordersActions.addOrder(cartItems ,cartTotalAmount, formState.inputValues.fullname, formState.inputValues.phone, location.coords.latitude, location.coords.longitude, Math.ceil(dis / 1000 * 5000 / 1000)));
         Alert.alert('Thanks you', 'Thanks you bought my product', [{text: 'OK'}]);
         props.navigation.navigate('ProductsOverView');
         setIsLoading(false);
     }
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      keyboardVerticalOffset={50}
-      style={styles.screen}
-    >
+    // <KeyboardAvoidingView
+    //   behavior="padding"
+    //   keyboardVerticalOffset={50}
+    //   style={styles.screen}
+    // >
       <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
         <LocationPicker />
         <Card style={styles.authContainer}>      
@@ -139,7 +146,7 @@ const PaymentScreen = props => {
           </ScrollView>
         </Card>
       </LinearGradient>
-    </KeyboardAvoidingView>
+    // </KeyboardAvoidingView>
   );
 };
 
